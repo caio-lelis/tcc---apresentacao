@@ -1,0 +1,941 @@
+% !TeX program = xelatex
+% !TeX encoding = UTF-8
+% Apresentacao do TCC1, sobre o template Beamer UnB disponibilizado pelo orientador.
+% Compilacao: make (xelatex; bibtex; xelatex; xelatex). Ver Makefile e Dockerfile.
+% O preambulo e o do template, com acrescimos marcados com "ACRESCIMO".
+\documentclass[aspectratio=169,10pt]{beamer}
+
+\usepackage{iftex}
+\ifPDFTeX
+  \PackageError{template-unb}{Use XeLaTeX ou LuaLaTeX}{As fontes oficiais requerem fontspec.}
+\fi
+\usepackage{fontspec}
+\usepackage[brazilian]{babel}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array} % ACRESCIMO: colunas de tabela alinhadas a esquerda
+\usepackage{amsmath,amssymb}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric}
+\usepackage{listings}
+\usefonttheme{professionalfonts}
+
+% =========================================================
+% FONTES OFICIAIS (template)
+% =========================================================
+\setsansfont{UnB Pro}[
+Path = fontes/,
+Extension = .otf,
+UprightFont = {UnB Pro_Regular},
+BoldFont = {UnB Pro_Bold},
+ItalicFont = {UnB Pro_Italic},
+BoldItalicFont = {UnB Pro_Bold Italic}
+]
+\renewcommand{\familydefault}{\sfdefault}
+\setmonofont{Latin Modern Mono}[
+Scale = MatchLowercase
+]
+
+% CORES (template)
+\definecolor{UnBAzul}{RGB}{0,58,122}
+\definecolor{UnBVerde}{RGB}{0,130,46}
+\definecolor{UnBAzulMedio}{RGB}{0,104,180}
+\definecolor{UnBVerdeEscuro}{RGB}{0,90,28}
+\definecolor{UnBPreto}{RGB}{29,29,29}
+\definecolor{UnBCinza}{RGB}{93,93,93}
+\definecolor{UnBCinzaClaro}{RGB}{238,238,238}
+\definecolor{UnBCinzaFundo}{RGB}{246,246,246}
+
+\usetheme{default}
+\setbeamersize{text margin left=8mm,text margin right=8mm}
+\setbeamercolor{normal text}{fg=UnBPreto,bg=white}
+\setbeamercolor{structure}{fg=UnBAzul}
+\setbeamercolor{title}{fg=UnBAzul}
+\setbeamercolor{subtitle}{fg=UnBCinza}
+\setbeamercolor{frametitle}{fg=UnBAzul,bg=white}
+\setbeamercolor{headline}{fg=UnBCinza,bg=white}
+\setbeamercolor{footline}{fg=UnBCinza,bg=white}
+\setbeamercolor{block title}{fg=white,bg=UnBAzul}
+\setbeamercolor{block body}{fg=UnBPreto,bg=UnBCinzaFundo}
+\setbeamercolor{block title example}{fg=white,bg=UnBVerdeEscuro}
+\setbeamercolor{block body example}{fg=UnBPreto,bg=UnBCinzaFundo}
+\setbeamercolor{block title alerted}{fg=white,bg=UnBCinza}
+\setbeamercolor{block body alerted}{fg=UnBPreto,bg=UnBCinzaClaro}
+\setbeamercolor{alerted text}{fg=UnBVerdeEscuro}
+\setbeamercolor{section in toc}{fg=UnBAzul}
+\setbeamercolor{bibliography entry author}{fg=UnBPreto}
+\setbeamercolor{bibliography entry title}{fg=UnBAzul}
+\setbeamercolor{bibliography entry location}{fg=UnBPreto}
+\setbeamercolor{bibliography entry note}{fg=UnBCinza}
+\setbeamerfont{title}{size=\LARGE,series=\bfseries}
+\setbeamerfont{subtitle}{size=\large}
+\setbeamerfont{frametitle}{size=\large,series=\bfseries}
+\setbeamerfont{block title}{size=\normalsize,series=\bfseries}
+\setbeamerfont{footline}{size=\tiny}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{itemize item}{\small\raisebox{0.15ex}{\(\blacktriangleright\)}}
+\setbeamertemplate{itemize subitem}{\scriptsize\(\bullet\)}
+\setbeamertemplate{blocks}[default]
+\setbeamertemplate{bibliography item}{\insertbiblabel}
+\hypersetup{colorlinks=true,linkcolor=UnBAzul,urlcolor=UnBAzulMedio,citecolor=UnBVerdeEscuro}
+
+% MARCAS (template)
+\newsavebox{\CaixaMarca}
+\newlength{\ProtecaoMarca}
+\newcommand{\MarcaUnB}[3]{%
+	\begingroup
+	\sbox{\CaixaMarca}{%
+		\includegraphics[width=#2,height=#3,keepaspectratio]{fig/#1.eps}%
+	}%
+	\setlength{\ProtecaoMarca}{\dimexpr\ht\CaixaMarca+\dp\CaixaMarca\relax}%
+	\setlength{\ProtecaoMarca}{0.33334\ProtecaoMarca}%
+	\setlength{\fboxsep}{\ProtecaoMarca}%
+	\colorbox{white}{\usebox{\CaixaMarca}}%
+	\endgroup
+}
+
+% DADOS EDITAVEIS
+\title[Contexto de negócio e confiabilidade de LLMs]{Contexto de negócio e confiabilidade de LLMs na análise de dados empresariais}
+\subtitle{Avaliação de um assistente \textit{text-to-SQL} para usuários não técnicos}
+\author[C. L. L. Borges]{Caio Lucas Lelis Borges}
+\institute[UnB]{Orientador: Prof. Dr. Fabiano Araujo Soares\\Trabalho de Conclusão de Curso 1 -- Engenharia de Software\\Faculdade de Ciências e Tecnologia em Engenharia}
+% Mes da defesa conforme latex/editaveis/informacoes.tex do TCC (la marcado como a confirmar).
+\date{Dezembro de 2026}
+\newcommand{\UnidadeCurta}{Engenharia de Software}
+
+% CABECALHO (template)
+\setbeamertemplate{headline}{%
+	\begin{beamercolorbox}[wd=\paperwidth,ht=16mm,dp=1mm]{headline}
+		\hbox to \paperwidth{%
+			\hspace{7mm}%
+			\raisebox{4mm}{\scriptsize\UnidadeCurta}%
+			\hfill
+			\MarcaUnB{as_bas_cor}{35mm}{7mm}%
+			\hspace{7mm}%
+		}%
+	\end{beamercolorbox}%
+}
+
+% ACRESCIMO 1: rodape com o numero do slide (o template nao numera; a banca cita o numero na arguicao).
+\setbeamertemplate{footline}{%
+	\hbox to \paperwidth{%
+		\usebeamerfont{footline}\usebeamercolor[fg]{footline}%
+		\hspace{8mm}\insertshorttitle\hfill\insertframenumber\hspace{8mm}%
+	}%
+	\vspace{2.5mm}%
+}
+
+% CAPA (template)
+\setbeamertemplate{title page}{%
+	\vspace*{1mm}
+
+	\noindent
+	\MarcaUnB{as_comp_cor}{88mm}{8mm}
+	\par
+
+	\vspace{5mm}
+
+	{\raggedright\usebeamerfont{title}\usebeamercolor[fg]{title}\inserttitle\par}
+
+	\vspace{2mm}
+
+	{\raggedright\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par}
+
+	\vspace{3mm}
+
+	{\color{UnBVerde}\rule{25mm}{1pt}\par}
+
+	\vspace{3mm}
+
+	{\normalsize\insertauthor\par}
+
+	\vspace{1mm}
+
+	{\small\insertinstitute\par}
+
+	\vspace{4mm}
+
+	{\small\color{UnBCinza}Brasília -- DF\hfill\insertdate\par}
+}
+
+% CODIGO (template; linguagem trocada para SQL)
+\lstset{language=SQL,basicstyle=\ttfamily\scriptsize,
+  commentstyle=\color{UnBVerdeEscuro},
+  stringstyle=\color{UnBAzulMedio},backgroundcolor=\color{UnBCinzaFundo},
+  frame=single,rulecolor=\color{UnBCinzaClaro},showstringspaces=false,
+  breaklines=true,columns=fullflexible,keepspaces=true,tabsize=4}
+
+% ACRESCIMO 2: estilos dos diagramas TikZ, nas cores do template.
+\tikzset{
+  etapa/.style={draw=UnBAzul,fill=UnBCinzaFundo,rounded corners=1mm,align=center,
+    font=\scriptsize,minimum height=11mm,inner sep=1mm},
+  etapallm/.style={etapa,fill=UnBAzul,text=white},
+  conexao/.style={-{Latex[length=2mm]},thick,UnBVerdeEscuro},
+  numero/.style={draw=UnBAzul,fill=UnBCinzaFundo,rounded corners=1mm,align=center,
+    font=\scriptsize,minimum width=20mm,minimum height=12mm,inner sep=1mm},
+  operador/.style={font=\Large\bfseries,text=UnBCinza},
+}
+
+% ACRESCIMO: cabecalho de tabela e coluna de paragrafo sem justificacao.
+\newcommand{\cab}[1]{\textcolor{UnBAzul}{\textbf{#1}}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+% ACRESCIMO 3: barra do cronograma. #1 linha, #2 semana inicial, #3 semana final, #4 cor, #5 rotulo.
+\newcommand{\barra}[5]{%
+  \node[anchor=east,font=\scriptsize] at (-0.2,#1+0.5) {#5};
+  \fill[#4,rounded corners=0.4mm] (#2-1,#1+0.16) rectangle (#3,#1+0.84);
+}
+
+\begin{document}
+
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+% ---------------------------------------------------------
+\section{Introdução}
+% ---------------------------------------------------------
+
+\begin{frame}{Contexto: quem tem a pergunta não escreve SQL}
+  \begin{itemize}
+    \item Os dados de negócio estão em bancos relacionais, e o acesso a eles exige SQL.
+    \item O usuário de negócio depende de um analista: cada pergunta entra em uma fila~\cite{alpar2016}.
+    \item O \textit{self-service} BI reduziu essa dependência, mas não a eliminou~\cite{lennerholt2018}.
+  \end{itemize}
+  \vspace{4mm}
+  % Duas linhas com as mesmas colunas: rotulo em x=0 e caixas centradas em 44, 86,5 e 129 mm.
+  \begin{tikzpicture}[
+      caixa/.style={etapa,font=\footnotesize,minimum width=30mm,minimum height=11mm},
+      caixallm/.style={etapallm,font=\footnotesize,minimum width=30mm,minimum height=11mm},
+      rotulo/.style={anchor=west,inner sep=0pt,font=\footnotesize\bfseries},
+      legenda/.style={above,inner sep=0.8mm,font=\tiny,text=UnBCinza}]
+    \node[rotulo,text=UnBCinza] at (0mm,0mm) {Hoje};
+    \node[caixa] (u1) at (44mm,0mm) {Usuário\\de negócio};
+    \node[caixa] (a1) at (86.5mm,0mm) {Analista\\escreve o SQL};
+    \node[caixa] (b1) at (129mm,0mm) {Banco\\de dados};
+    \draw[conexao] (u1) -- node[legenda] {pedido} (a1);
+    \draw[conexao] (a1) -- node[legenda] {SQL} (b1);
+    \node[rotulo,text=UnBAzul] at (0mm,-16mm) {Com \textit{text-to-SQL}};
+    \node[caixa] (u2) at (44mm,-16mm) {Usuário\\de negócio};
+    \node[caixallm] (a2) at (86.5mm,-16mm) {Assistente:\\o LLM gera o SQL};
+    \node[caixa] (b2) at (129mm,-16mm) {Banco\\de dados};
+    \draw[conexao] (u2) -- node[legenda] {pergunta} (a2);
+    \draw[conexao] (a2) -- node[legenda] {SQL} (b2);
+  \end{tikzpicture}
+  \vspace{3mm}
+
+  Com os LLMs, basta descrever o banco no \textit{prompt} para o modelo gerar a consulta~\cite{brown2020,hong2025}.
+\end{frame}
+
+\begin{frame}[fragile]{Problema: consulta válida, número errado}
+  Pergunta (exemplo hipotético): \textbf{``Quantas vendas houve em março de 2026?''}
+  \vspace{1mm}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.47\textwidth}
+      \begin{alertblock}{Sem a regra de negócio: 40 vendas}
+\begin{lstlisting}
+SELECT COUNT(*) FROM contratos
+WHERE data_criacao
+      BETWEEN '2026-03-01' AND '2026-03-31';
+\end{lstlisting}
+      \end{alertblock}
+    \end{column}
+    \begin{column}{0.47\textwidth}
+      \begin{exampleblock}{Com a regra de negócio: 33 vendas}
+\begin{lstlisting}
+SELECT COUNT(*) FROM contratos
+WHERE status = 'assinado' AND data_assinatura
+      BETWEEN '2026-03-01' AND '2026-03-31';
+\end{lstlisting}
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+  \vspace{2mm}
+  \begin{itemize}
+    \item \textbf{Regra da empresa:} só conta como venda o contrato assinado, no mês da assinatura.
+    \item As duas consultas são válidas. A primeira superestima as vendas em cerca de 21\%, sem sinal de erro.
+    \item O erro não é de SQL: falta uma informação que só a organização possui.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Perguntas de pesquisa e objetivos}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{QP1 (principal)}
+        Em que medida o nível de contexto de negócio fornecido ao LLM altera a acurácia
+        das respostas de um assistente \textit{text-to-SQL}?
+      \end{block}
+      \begin{exampleblock}{QP2 (complementar)}
+        Como usuários não técnicos realizam tarefas de consulta na configuração de contexto selecionada?
+      \end{exampleblock}
+    \end{column}
+    \begin{column}{0.46\textwidth}
+      \textbf{\color{UnBAzul}Objetivos específicos}
+      \begin{enumerate}
+        \item Construir um banco de 20 perguntas de negócio, com gabarito.
+        \item Desenvolver o assistente em três configurações de contexto.
+        \item Medir a acurácia de execução e classificar os erros.
+        \item Avaliar o uso por usuários não técnicos: acerto, tempo e SUS.
+      \end{enumerate}
+    \end{column}
+  \end{columns}
+  \vspace{1mm}
+  {\footnotesize \textbf{Autonomia}, neste trabalho: com o assistente já configurado, formular a pergunta,
+  obter a resposta correta e interpretá-la sem um analista.}
+\end{frame}
+
+\begin{frame}{Contribuição: o resultado é a medida, não o software}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.47\textwidth}
+      \begin{block}{Contribuição científica}
+        \begin{itemize}
+          \item O efeito incremental de cada nível de contexto sobre a acurácia:
+            descrições de tabelas e colunas e, em seguida, regras de negócio.
+          \item A classificação dos erros que o contexto elimina e dos que persistem.
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{0.47\textwidth}
+      \begin{alertblock}{Instrumentos da medição}
+        \begin{itemize}
+          \item Assistente \textit{text-to-SQL}.
+          \item Banco de perguntas com gabarito.
+          \item Contextos versionados.
+        \end{itemize}
+        \vspace{1mm}
+        Ficam disponíveis para reprodução.
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+  \vspace{4mm}
+  Mantidos fixos o modelo, os dados e as perguntas, o que varia é apenas o contexto.
+  O estudo com usuários acrescenta uma observação exploratória.
+\end{frame}
+
+% ---------------------------------------------------------
+\section{Referencial teórico}
+% ---------------------------------------------------------
+
+\begin{frame}{\textit{Text-to-SQL} em bancos reais}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.36\textwidth}
+      \begin{block}{Formulação da tarefa}
+        \centering \(\hat{y} = M(q, S, K)\)\\[1mm]
+        \raggedright\small
+        \(q\): pergunta; \(S\): esquema do banco;\\
+        \(K\): contexto adicional.\\
+        \textbf{\(K\) é o que este trabalho varia.}
+      \end{block}
+    \end{column}
+    \begin{column}{0.6\textwidth}
+      \centering
+      \begin{tikzpicture}[x=0.45mm,y=-5.8mm]
+        \foreach \v in {0,25,50,75,100} {
+          \draw[UnBCinzaClaro] (\v,-0.1) -- (\v,4.1);
+          \node[font=\tiny,text=UnBCinza] at (\v,4.4) {\v};
+        }
+        \fill[UnBAzul] (0,0.2) rectangle (86.6,0.8);
+        \node[anchor=west,font=\scriptsize\bfseries] at (86.6,0.5) {86,6};
+        \node[anchor=east,font=\scriptsize,align=right] at (-2,0.5) {Spider, DAIL-SQL~\cite{gao2024}};
+        \fill[UnBAzul] (0,1.2) rectangle (85.3,1.8);
+        \node[anchor=west,font=\scriptsize\bfseries] at (85.3,1.5) {85,3};
+        \node[anchor=east,font=\scriptsize,align=right] at (-2,1.5) {Spider, DIN-SQL~\cite{pourreza2023}};
+        \fill[UnBAzulMedio] (0,2.2) rectangle (55.9,2.8);
+        \node[anchor=west,font=\scriptsize\bfseries] at (55.9,2.5) {55,9};
+        \node[anchor=east,font=\scriptsize,align=right] at (-2,2.5) {BIRD, DIN-SQL~\cite{pourreza2023}};
+        \fill[UnBVerde] (0,3.2) rectangle (21.3,3.8);
+        \node[anchor=west,font=\scriptsize\bfseries] at (21.3,3.5) {21,3};
+        \node[anchor=east,font=\scriptsize,align=right] at (-2,3.5) {Spider 2.0, agente~\cite{lei2025}};
+        \node[font=\tiny,text=UnBCinza] at (50,5.05) {Acurácia de execução ou tarefas resolvidas [\%]};
+      \end{tikzpicture}
+
+      {\tiny\color{UnBCinza}Resultados relatados pelos autores, em condições diferentes: indicam a ordem de grandeza.}
+    \end{column}
+  \end{columns}
+  \vspace{1mm}
+  \begin{itemize}
+    \item \textbf{Métrica:} acurácia de execução, que compara o resultado, e não o texto da consulta~\cite{li2023}.
+    \item Quanto mais realista o banco, menor o desempenho: a dificuldade está no significado da pergunta.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Como o contexto atua na geração da consulta}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.56\textwidth}
+      \centering
+      \begin{tikzpicture}[
+          termo/.style={draw=UnBAzul,fill=white,rounded corners=1mm,font=\scriptsize,
+            minimum width=25mm,minimum height=7mm,align=center},
+          elem/.style={draw=UnBCinza,fill=UnBCinzaFundo,rounded corners=1mm,font=\scriptsize,
+            minimum width=31mm,minimum height=6.5mm,align=center}]
+        \node[termo] (vendas) at (0mm,8mm) {termo ``vendas''};
+        \node[termo] (marco) at (0mm,-8mm) {``março de 2026''};
+        \node[elem] (todos) at (51mm,13.5mm) {todos os registros};
+        \node[elem] (status) at (51mm,4.5mm) {\texttt{status = 'assinado'}};
+        \node[elem] (cri) at (51mm,-4.5mm) {\texttt{data\_criacao}};
+        \node[elem] (ass) at (51mm,-13.5mm) {\texttt{data\_assinatura}};
+        \draw[-{Latex[length=2mm]},dashed,UnBCinza,thick] (vendas.east) -- (todos.west);
+        \draw[-{Latex[length=2mm]},dashed,UnBCinza,thick] (marco.east) -- (cri.west);
+        \draw[-{Latex[length=2mm]},UnBVerdeEscuro,very thick] (vendas.east) -- (status.west);
+        \draw[-{Latex[length=2mm]},UnBVerdeEscuro,very thick] (marco.east) -- (ass.west);
+        \node[font=\tiny,text=UnBCinza] at (0mm,19mm) {Pergunta};
+        \node[font=\tiny,text=UnBCinza] at (51mm,19mm) {Tabela \texttt{contratos}};
+        \draw[dashed,UnBCinza,thick] (-12mm,-21mm) -- (-4mm,-21mm);
+        \node[anchor=west,font=\tiny] at (-3mm,-21mm) {sem as regras (suposição)};
+        \draw[UnBVerdeEscuro,very thick] (32mm,-21mm) -- (40mm,-21mm);
+        \node[anchor=west,font=\tiny] at (41mm,-21mm) {com as regras (C2)};
+      \end{tikzpicture}
+    \end{column}
+    \begin{column}{0.41\textwidth}
+      \begin{block}{Evidência no BIRD}
+        \small
+        GPT-4: \textbf{34,88\%} sem o conhecimento externo e \textbf{54,89\%} com ele~\cite{li2023}.\\[1mm]
+        Erros analisados: 41,6\% de vinculação ao esquema e 40,8\% de compreensão do conteúdo do banco.
+      \end{block}
+    \end{column}
+  \end{columns}
+  \vspace{2mm}
+  \textbf{Hipótese:} as descrições (C1) reduzem os erros de esquema, de junção e de valores;
+  as regras (C2) reduzem os erros em perguntas cujo termo central é uma métrica de negócio.
+\end{frame}
+
+\begin{frame}{Trabalhos relevantes e lacuna}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.57\textwidth}
+      \footnotesize
+      \begin{tabular}{@{}L{24mm}L{37mm}l@{}}
+        \toprule
+        \cab{Trabalho} & \cab{Conhecimento de negócio} &
+        \cab{Usuários}\\
+        \midrule
+        Spider~\cite{yu2018} & Não considerado & Não\\
+        BIRD~\cite{li2023} & Evidência por pergunta, escrita por especialistas & Não\\
+        Spider 2.0~\cite{lei2025} & Metadados e documentação a consultar & Não\\
+        DAIL-SQL~\cite{gao2024} & Não considerado & Não\\
+        DIN-SQL~\cite{pourreza2023} & Não considerado & Não\\
+        Knowledge-to-SQL~\cite{hong2024} & Gerado por um modelo auxiliar & Não\\
+        \midrule
+        \textbf{Este trabalho} & \textbf{Manipulado em três níveis} & \textbf{Sim}\\
+        \bottomrule
+      \end{tabular}
+    \end{column}
+    \begin{column}{0.4\textwidth}
+      \begin{block}{Não identificado nos trabalhos analisados}
+        \small
+        \begin{enumerate}
+          \item Separar o efeito das descrições do efeito das regras de negócio.
+          \item Um contexto único da organização, válido para todas as perguntas.
+          \item O uso por profissionais não técnicos do domínio.
+        \end{enumerate}
+      \end{block}
+    \end{column}
+  \end{columns}
+  \vspace{2mm}
+  {\small O conhecimento externo melhora a acurácia: cerca de 5 pontos percentuais quando gerado
+  automaticamente~\cite{hong2024} e cerca de 20 quando escrito por especialistas~\cite{li2023}.}
+\end{frame}
+
+% ---------------------------------------------------------
+\section{Proposta}
+% ---------------------------------------------------------
+
+\begin{frame}{Três configurações de contexto: C0, C1 e C2}
+  \small
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.31\textwidth}
+      \begin{alertblock}{\small C0: esquema puro}
+        \footnotesize
+        Nomes de tabelas e colunas, tipos e amostra de linhas.\\[1.5mm]
+        \texttt{contratos(id, cliente\_id, valor, data\_criacao, data\_assinatura, status)}
+      \end{alertblock}
+    \end{column}
+    \begin{column}{0.31\textwidth}
+      \begin{block}{\small C1: esquema documentado}
+        \footnotesize
+        C0 + descrição de cada tabela e coluna.\\[1.5mm]
+        \texttt{status}: \texttt{'enviado'}, \texttt{'assinado'} ou \texttt{'cancelado'}.\\
+        \texttt{data\_assinatura}: dia em que o cliente assinou.
+      \end{block}
+    \end{column}
+    \begin{column}{0.31\textwidth}
+      \begin{exampleblock}{\small C2: camada semântica}
+        \footnotesize
+        C1 + regras de negócio e definições de métricas.\\[1.5mm]
+        Venda: contrato com \texttt{status = 'assinado'}.\\
+        Mês da venda: o de \texttt{data\_assinatura}.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+  \vspace{3mm}
+  \begin{itemize}
+    \item Configurações cumulativas; o restante do \textit{prompt} é idêntico, sem exemplos resolvidos.
+    \item Camada semântica, aqui, é texto no \textit{prompt}: nada impõe as regras fora do modelo.
+    \item No experimento, C1 e C2 serão redigidos pelo autor e validados por analistas.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{O assistente: fluxo de uma pergunta}
+  \centering
+  \begin{tikzpicture}[node distance=3.4mm]
+    \node[etapa,minimum width=20.5mm] (p) {Pergunta em\\linguagem\\natural};
+    \node[etapa,minimum width=20.5mm,right=of p] (c) {Construtor\\de contexto\\(C0, C1 ou C2)};
+    \node[etapallm,minimum width=20.5mm,right=of c] (g) {LLM: gera o\\SQL e sugere\\o gráfico};
+    \node[etapa,minimum width=20.5mm,right=of g] (v) {Validador\\e executor\\(DuckDB)};
+    \node[etapallm,minimum width=20.5mm,right=of v] (i) {LLM: interpreta\\o resultado\\obtido};
+    \node[etapa,minimum width=20.5mm,right=of i] (r) {Resposta: texto,\\gráfico e\\tabela};
+    \draw[conexao] (p) -- (c);
+    \draw[conexao] (c) -- (g);
+    \draw[conexao] (g) -- (v);
+    \draw[conexao] (v) -- (i);
+    \draw[conexao] (i) -- (r);
+  \end{tikzpicture}
+  \vspace{3mm}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.6\textwidth}
+      \begin{block}{Decisões de projeto}
+        \small
+        \begin{itemize}
+          \item Duas chamadas ao modelo: o texto só é redigido depois da execução.
+          \item Sem autocorreção, para isolar o efeito do contexto.
+          \item Validação da estrutura da consulta e conexão somente leitura.
+          \item A consulta SQL aparece apenas em modo avançado.
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{0.37\textwidth}
+      \begin{alertblock}{Tecnologias}
+        \small
+        GPT-5.6 Terra (API da OpenAI)\\
+        DuckDB\\
+        Python e FastAPI\\
+        Vue.js e Apache ECharts
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ---------------------------------------------------------
+\section{Metodologia}
+% ---------------------------------------------------------
+
+\begin{frame}{Desenho da pesquisa}
+  \centering
+  \begin{tikzpicture}[node distance=6mm]
+    \node[etapa,minimum width=30.8mm,minimum height=17mm] (f) {\textbf{Congelamento}\\base de dados, contextos\\e banco de perguntas};
+    \node[etapallm,minimum width=30.8mm,minimum height=17mm,right=of f] (e) {\textbf{Experimento de acurácia}\\20 perguntas em\\C0, C1 e C2};
+    \node[etapa,minimum width=30.8mm,minimum height=17mm,right=of e] (m) {\textbf{Configuração de}\\\textbf{melhor desempenho}};
+    \node[etapallm,minimum width=30.8mm,minimum height=17mm,right=of m,fill=UnBVerdeEscuro,draw=UnBVerdeEscuro] (u) {\textbf{Estudo com usuários}\\5 a 8 profissionais\\não técnicos};
+    \draw[conexao] (f) -- (e);
+    \draw[conexao] (e) -- (m);
+    \draw[conexao] (m) -- (u);
+    \node[below=1.5mm of e,font=\small\bfseries,text=UnBAzul] {responde à QP1};
+    \node[below=1.5mm of u,font=\small\bfseries,text=UnBVerdeEscuro] {responde à QP2};
+  \end{tikzpicture}
+  \vspace{2mm}
+  \begin{itemize}
+    \item \textbf{Classificação:} pesquisa aplicada, predominantemente quantitativa, explicativa e experimental~\cite{wohlin2012}.
+    \item \textbf{Medição:} abordagem GQM~\cite{vansolingen2002}. As perguntas Q1 a Q4 detalham a QP1, e a Q5 corresponde à QP2.
+    \item \textbf{Participantes:} analistas de negócio (validação) e profissionais não técnicos, todos da empresa que fornecerá os dados.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Banco de perguntas, contextos e gabarito}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.38\textwidth}
+      \small
+      \begin{itemize}
+        \item 20 perguntas do domínio comercial, com SQL de referência e resultado esperado.
+        \item Validação por analistas de negócio.
+        \item 5 perguntas de desenvolvimento, à parte das 20 de avaliação.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.6\textwidth}
+      \footnotesize
+      \begin{tabular}{@{}lll@{}}
+        \toprule
+        \cab{Dimensão} & \cab{Níveis} & \cab{No banco}\\
+        \midrule
+        Complexidade & Uma tabela; com junção & 10 de cada\\
+        Dependência de regra & Não; sim & Ao menos 8\\
+        Ambiguidade & Não; sim & Ao menos 4\\
+        \bottomrule
+      \end{tabular}
+
+      \vspace{1mm}
+      {\scriptsize\color{UnBCinza}Dimensões independentes: uma pergunta pode ter junção e depender de regra.}
+      \vspace{1mm}
+    \end{column}
+  \end{columns}
+  \vspace{2mm}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.47\textwidth}
+      \begin{block}{Pergunta ambígua}
+        \small
+        O gabarito é a leitura adotada pela empresa, confirmada pelos analistas;
+        outras leituras legítimas também são aceitas.
+      \end{block}
+    \end{column}
+    \begin{column}{0.47\textwidth}
+      \begin{exampleblock}{Congelados e versionados juntos}
+        \small
+        Base de dados, contextos, \textit{prompt}, perguntas e gabaritos,
+        antes da primeira execução.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Experimento de acurácia}
+  \centering
+  \begin{tikzpicture}[node distance=1.2mm]
+    \node[numero] (a) {{\Large\bfseries\color{UnBAzul}20}\\perguntas};
+    \node[operador,right=of a] (x1) {\(\times\)};
+    \node[numero,right=of x1] (b) {{\Large\bfseries\color{UnBAzul}3}\\configurações};
+    \node[operador,right=of b] (x2) {\(\times\)};
+    \node[numero,right=of x2] (c) {{\Large\bfseries\color{UnBAzul}3}\\repetições};
+    \node[operador,right=of c] (x3) {\(=\)};
+    \node[numero,right=of x3] (d) {{\Large\bfseries\color{UnBAzul}180}\\execuções};
+    \node[numero,right=12mm of d,fill=UnBVerdeEscuro,draw=UnBVerdeEscuro,text=white] (e) {{\Large\bfseries 60}\\vereditos};
+    \draw[conexao] (d) -- node[above,font=\tiny,text=UnBCinza] {maioria} node[below,font=\tiny,text=UnBCinza] {2 de 3} (e);
+  \end{tikzpicture}
+  \vspace{2mm}
+
+  \raggedright
+  {\small A unidade experimental é a pergunta (\(n = 20\)), em desenho pareado.
+  As 180 execuções não são amostras independentes.}
+  \vspace{1mm}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.47\textwidth}
+      \begin{block}{Regra de acerto}
+        \small
+        Mesmo resultado da consulta de referência: mesmas linhas, sem considerar ordem e nomes de colunas,
+        com tolerância de 0,01.
+      \end{block}
+    \end{column}
+    \begin{column}{0.47\textwidth}
+      \begin{alertblock}{Mantido constante}
+        \small
+        Modelo e versão, temperatura zero, instruções do \textit{prompt}, tabelas e perguntas.
+        Não há autocorreção.
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Análise estatística}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.56\textwidth}
+      \textbf{\color{UnBAzul}Análise principal (60 vereditos)}
+      \begin{enumerate}
+        \item Acurácia de cada configuração, com intervalo de confiança de 95\% pelo método de Wilson~\cite{wilson1927}.
+        \item Teste global: Q de Cochran~\cite{cochran1950}, com nível de significância de 5\%.
+        \item Comparações duas a duas: McNemar exato~\cite{mcnemar1947}, com correção de Bonferroni~\cite{dunn1961}.
+        \item Tamanho do efeito: diferença em pontos percentuais e perguntas que mudaram de veredito.
+      \end{enumerate}
+    \end{column}
+    \begin{column}{0.41\textwidth}
+      \begin{alertblock}{Poder estatístico limitado}
+        \small
+        Com 20 perguntas, apenas diferenças grandes serão detectadas.
+        A ausência de significância não será lida como ausência de efeito.
+      \end{alertblock}
+      \vspace{1mm}
+      \begin{exampleblock}{Exploratório, sem teste de hipótese}
+        \small
+        Acurácia por dimensão da pergunta, erros por categoria e consistência entre repetições.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Estudo com usuários}
+  \begin{itemize}
+    \item De 5 a 8 profissionais não técnicos do domínio comercial, que não escrevem SQL.
+    \item Realizado apenas na configuração de melhor desempenho, com o assistente já configurado.
+  \end{itemize}
+  \vspace{1mm}
+  \centering
+  \begin{tikzpicture}[node distance=4mm]
+    \node[etapa,minimum width=25mm] (a) {TCLE};
+    \node[etapa,minimum width=25mm,right=of a] (b) {Apresentação\\breve};
+    \node[etapallm,minimum width=25mm,right=of b] (c) {4 a 6 tarefas\\de consulta};
+    \node[etapa,minimum width=25mm,right=of c] (d) {Questionário\\SUS};
+    \node[etapa,minimum width=25mm,right=of d] (e) {Entrevista\\curta};
+    \draw[conexao] (a) -- (b);
+    \draw[conexao] (b) -- (c);
+    \draw[conexao] (c) -- (d);
+    \draw[conexao] (d) -- (e);
+  \end{tikzpicture}
+  \vspace{1.5mm}
+
+  \raggedright\small
+  \begin{tabular*}{\textwidth}{@{}l@{\extracolsep{\fill}}ll@{}}
+    \toprule
+    \cab{Dimensão~\cite{bevan2015}} & \cab{Significado} & \cab{Métrica}\\
+    \midrule
+    Eficácia & Alcançar o objetivo corretamente & Taxa de acerto das tarefas\\
+    Eficiência & Recursos gastos para alcançá-lo & Tempo por tarefa\\
+    Satisfação & Percepção do usuário sobre o uso & Escore SUS, de 0 a 100~\cite{brooke1996}\\
+    \bottomrule
+  \end{tabular*}
+  \vspace{1mm}
+
+  {\footnotesize\color{UnBCinza}Estudo exploratório: com poucos participantes, os resultados são indicativos~\cite{nielsen1993}.}
+\end{frame}
+
+\begin{frame}{Ameaças à validade}
+  \small
+  \begin{tabular}{@{}lL{58mm}L{60mm}@{}}
+    \toprule
+    \cab{Tipo} & \cab{Ameaça} & \cab{Mitigação}\\
+    \midrule
+    Interna & Perguntas escritas pelo autor, que conhece as regras de negócio &
+      Congelamento prévio do banco e validação por analistas\\
+    Interna & Não determinismo do modelo &
+      Temperatura zero, versão fixa e três repetições\\
+    Construto & Contextos C1 e C2 escritos pelo autor &
+      Revisão pelos analistas; conclusão restrita a contexto validado\\
+    Externa & Um modelo, um domínio e uma base de dados &
+      Escopo declarado, sem generalização além dele\\
+    Conclusão & Apenas 20 perguntas limitam o poder estatístico &
+      Intervalos de confiança e tamanho das diferenças\\
+    \bottomrule
+  \end{tabular}
+  \vspace{3mm}
+
+  {\footnotesize\color{UnBCinza}Tipos de ameaça conforme Wohlin et al.~\cite{wohlin2012}. A lista completa está na Tabela 4.5 do texto.}
+\end{frame}
+
+% ---------------------------------------------------------
+\section{Encerramento}
+% ---------------------------------------------------------
+
+\begin{frame}{Cronograma do TCC2, em semanas relativas}
+  \centering
+  \begin{tikzpicture}[x=5.5mm,y=-3.0mm]
+    \foreach \s in {1,...,16} {
+      \node[font=\tiny,text=UnBCinza] at (\s-0.5,-0.6) {S\s};
+    }
+    \foreach \s in {0,...,16} {
+      \draw[UnBCinzaClaro] (\s,0) -- (\s,10);
+    }
+    \barra{0}{1}{2}{UnBAzul}{Configuração e ingestão de dados}
+    \barra{1}{2}{3}{UnBAzul}{Contexto de negócio}
+    \barra{2}{3}{5}{UnBAzul}{Modelo, validação e registro}
+    \barra{3}{4}{6}{UnBAzul}{Interface de conversa}
+    \barra{4}{6}{7}{UnBAzul}{Visualização}
+    \barra{5}{7}{8}{UnBAzul}{\textit{Harness} e testes}
+    \barra{6}{1}{6}{UnBVerde}{Banco de perguntas (em paralelo)}
+    \barra{7}{9}{11}{UnBVerde}{Experimento de acurácia e análise}
+    \barra{8}{12}{13}{UnBVerde}{Estudo com usuários e análise}
+    \barra{9}{10}{16}{UnBVerde}{Escrita}
+    \node[anchor=east,font=\scriptsize\bfseries,text=UnBVerdeEscuro] at (-0.2,10.6) {Marcos};
+    \foreach \s in {6,8,11,13,16} {
+      \draw[UnBVerdeEscuro,thick] (\s,0) -- (\s,10.6);
+      \node[diamond,fill=UnBVerdeEscuro,inner sep=0.75mm] at (\s,10.6) {};
+      \node[font=\tiny\bfseries,text=UnBVerdeEscuro] at (\s,11.7) {S\s};
+    }
+  \end{tikzpicture}
+  \vspace{1mm}
+
+  \raggedright\footnotesize
+  \textbf{\color{UnBVerdeEscuro}Marcos:} S6, banco de perguntas congelado; S8, assistente pronto; S11, melhor configuração
+  escolhida; S13, estudo com usuários concluído; S16, entrega.\\[0.5mm]
+  \textbf{Esforço estimado:} cerca de 280 h, sendo 164 h de desenvolvimento ({\color{UnBAzul}\rule{3mm}{1.6mm}})
+  e 116 h de pesquisa e escrita ({\color{UnBVerde}\rule{3mm}{1.6mm}}); aproximadamente 17,5 h por semana.
+\end{frame}
+
+\begin{frame}{Considerações finais e próximos passos}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.47\textwidth}
+      \begin{block}{Concluído no TCC1}
+        \small
+        \begin{itemize}
+          \item Problema e perguntas de pesquisa.
+          \item Referencial e trabalhos relevantes.
+          \item Solução especificada.
+          \item Avaliação planejada e cronograma.
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{0.47\textwidth}
+      \begin{alertblock}{A definir para iniciar o TCC2}
+        \small
+        \begin{itemize}
+          \item Tabelas do domínio e autorização de uso.
+          \item Versão datada do modelo.
+          \item Estimativa de custo das execuções.
+          \item Calendário da disciplina.
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+  \vspace{1mm}
+  \begin{exampleblock}{Resultado esperado}
+    \small
+    A acurácia do assistente sem contexto e com cada nível de contexto de negócio e, na melhor condição,
+    como usuários não técnicos realizam as tarefas.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{}
+  \vspace{2mm}
+  \centering
+  {\LARGE\bfseries\color{UnBAzul}Obrigado pela atenção.}
+
+  \vspace{6mm}
+  \begin{minipage}{0.8\textwidth}
+    \begin{block}{Pergunta principal do trabalho}
+      Em que medida o nível de contexto de negócio fornecido ao LLM altera a acurácia das respostas
+      de um assistente \textit{text-to-SQL}?
+    \end{block}
+  \end{minipage}
+
+  \vspace{5mm}
+  {\small Caio Lucas Lelis Borges}
+\end{frame}
+
+\begin{frame}[allowframebreaks]{Referências}
+  \scriptsize
+  \setlength{\emergencystretch}{2em}
+  \bibliographystyle{abntex2-num}
+  \bibliography{referencias}
+\end{frame}
+
+% ---------------------------------------------------------
+% SLIDES DE APOIO (para a arguicao)
+% ---------------------------------------------------------
+\appendix
+\section{Slides de apoio}
+
+\begin{frame}{Apoio: requisitos do assistente}
+  \scriptsize
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.54\textwidth}
+      \begin{tabular}{@{}lL{64mm}@{}}
+        \toprule
+        \cab{ID} & \cab{Requisito funcional}\\
+        \midrule
+        RF01 & Anexar uma ou mais tabelas em formato CSV.\\
+        RF02 & Cadastrar e editar a descrição de cada tabela e, opcionalmente, de cada coluna.\\
+        RF03 & Cadastrar regras de negócio e definições de métricas.\\
+        RF04 & Receber perguntas em linguagem natural e responder com base nos dados.\\
+        RF05 & Exibir a consulta SQL gerada apenas em modo avançado.\\
+        RF06 & Selecionar a configuração de contexto (C0, C1 ou C2).\\
+        RF07 & Executar o banco de perguntas em lote e registrar os resultados.\\
+        RF08 & Apresentar um texto que interpreta o resultado obtido.\\
+        RF09 & Apresentar um gráfico interativo adequado ao resultado.\\
+        \bottomrule
+      \end{tabular}
+    \end{column}
+    \begin{column}{0.44\textwidth}
+      \begin{tabular}{@{}lL{50mm}@{}}
+        \toprule
+        \cab{ID} & \cab{Requisito não funcional}\\
+        \midrule
+        RNF01 & Executar apenas consultas de leitura.\\
+        RNF02 & Registrar o \textit{prompt}, a consulta, o resultado, o tempo e o custo de cada execução.\\
+        RNF03 & Manter fixas a versão do modelo e a temperatura (zero) durante o experimento.\\
+        RNF04 & Limitar o tempo de execução e o número de linhas retornadas.\\
+        RNF05 & Oferecer interface em português, utilizável por quem não conhece SQL.\\
+        \bottomrule
+      \end{tabular}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Apoio: validação das consultas geradas}
+  \small
+  A validação analisa a estrutura da consulta. Ela só será executada se atender a todos os critérios:
+  \begin{itemize}
+    \item \textbf{Comando único:} textos com dois ou mais comandos são rejeitados por inteiro.
+    \item \textbf{Somente leitura:} apenas consultas de seleção, com ou sem \texttt{WITH}.
+    \item \textbf{Recursos não permitidos:} configuração do banco, extensões, anexação de outros bancos,
+      exportação e funções que acessam arquivos ou a rede.
+    \item \textbf{Tabelas conhecidas:} apenas as criadas a partir dos arquivos anexados.
+    \item \textbf{Limites:} número de linhas e tempo máximo de execução.
+  \end{itemize}
+  \vspace{2mm}
+  \begin{block}{Segunda barreira, independente do validador}
+    Conexão com o banco em modo somente leitura, com acesso a arquivos externos e à rede desabilitado.
+  \end{block}
+  \vspace{1mm}
+  {\small No experimento, uma consulta rejeitada conta como resposta incorreta.}
+\end{frame}
+
+\begin{frame}[fragile]{Apoio: item ilustrativo do banco de perguntas}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.53\textwidth}
+      \textbf{Pergunta:} qual foi o valor vendido por segmento de cliente em março de 2026?
+      \vspace{1mm}
+\begin{lstlisting}
+SELECT c.segmento, SUM(k.valor) AS valor_vendido
+FROM contratos k
+JOIN clientes c ON c.id = k.cliente_id
+WHERE k.status = 'assinado'
+  AND k.data_assinatura
+      BETWEEN '2026-03-01' AND '2026-03-31'
+GROUP BY c.segmento;
+\end{lstlisting}
+    \end{column}
+    \begin{column}{0.44\textwidth}
+      \small
+      \begin{tabular}{@{}ll@{}}
+        \toprule
+        \cab{Campo} & \cab{Valor}\\
+        \midrule
+        Complexidade & Com junção\\
+        Depende de regra & Sim\\
+        Ambígua & Não\\
+        Tabelas & contratos e clientes\\
+        \bottomrule
+      \end{tabular}
+
+      \vspace{2mm}
+      \textbf{Regra envolvida:} venda é o contrato com \texttt{status} \texttt{'assinado'},
+      atribuída ao mês de \texttt{data\_assinatura}.
+
+      \vspace{2mm}
+      \textbf{Resultado esperado:} (Indústria, 61.000,00) e (Varejo, 82.500,00).
+    \end{column}
+  \end{columns}
+  \vspace{2mm}
+  {\scriptsize\color{UnBCinza}Item hipotético. As perguntas do experimento serão escritas sobre as tabelas reais do domínio comercial.}
+\end{frame}
+
+\begin{frame}{Apoio: perguntas e métricas (GQM)}
+  \small
+  \begin{tabular}{@{}lL{70mm}L{55mm}@{}}
+    \toprule
+    \cab{ID} & \cab{Pergunta} & \cab{Métrica}\\
+    \midrule
+    Q1 & O nível de contexto altera a acurácia das respostas? & Acurácia de execução por configuração\\
+    Q2 & Em que tipo de pergunta o contexto mais contribui? (exploratória) & Acurácia por dimensão da pergunta e configuração\\
+    Q3 & Que erros o contexto elimina e quais persistem? & Distribuição dos erros por categoria e configuração\\
+    Q4 & As respostas são estáveis entre execuções? & Consistência entre repetições\\
+    Q5 & Na configuração selecionada, usuários não técnicos concluem as tarefas corretamente sem auxílio? &
+      Taxa de acerto, tempo por tarefa e escore SUS\\
+    \bottomrule
+  \end{tabular}
+  \vspace{2mm}
+
+  {\footnotesize\color{UnBCinza}Q1 a Q4 detalham a QP1 (experimento de acurácia); Q5 corresponde à QP2 (estudo com usuários).}
+\end{frame}
+
+\begin{frame}{Apoio: riscos de execução e mitigações}
+  \small
+  \begin{tabular}{@{}L{62mm}L{76mm}@{}}
+    \toprule
+    \cab{Risco} & \cab{Mitigação}\\
+    \midrule
+    Tabelas do domínio comercial ainda não definidas & Definição no início do TCC2, antes da construção do banco de perguntas\\
+    Autorização de uso e presença de dados pessoais & Autorização formal da empresa e anonimização antes da ingestão\\
+    Dificuldade de recrutar participantes & Versão reduzida do estudo, com avaliação qualitativa de três participantes\\
+    Alteração ou descontinuação do modelo na API & Uso de versão datada fixa e registro da versão utilizada\\
+    Custo da API acima do previsto & Estimativa de custo antes do experimento e redução de repetições, se necessário\\
+    Esforço maior que a disponibilidade de horas & Simplificação dos gráficos e versão reduzida do estudo com usuários\\
+    \bottomrule
+  \end{tabular}
+\end{frame}
+
+\end{document}

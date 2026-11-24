@@ -1,0 +1,372 @@
+% Copia de latex/bibliografia.bib do TCC para os slides. Os campos de URL das entradas de
+% periodicos, anais e livros foram retirados: o abntex2-num os imprime sem quebra de linha.
+% =====================================================================
+% Referências do TCC (metadados conferidos em doi.org, Crossref,
+% anais da NeurIPS e arXiv em 2026-10-20)
+% =====================================================================
+
+% --- LLMs ---
+@inproceedings{vaswani2017,
+	Author = {Vaswani, Ashish and Shazeer, Noam and Parmar, Niki and Uszkoreit, Jakob and Jones, Llion and Gomez, Aidan N. and Kaiser, {\L}ukasz and Polosukhin, Illia},
+	Title = {Attention Is All You Need},
+	Booktitle = {Advances in Neural Information Processing Systems},
+	Volume = {30},
+	Publisher = {Curran Associates, Inc.},
+	Year = {2017},
+}
+
+@inproceedings{brown2020,
+	Author = {Brown, Tom and Mann, Benjamin and Ryder, Nick and Subbiah, Melanie and Kaplan, Jared D. and Dhariwal, Prafulla and Neelakantan, Arvind and Shyam, Pranav and Sastry, Girish and Askell, Amanda and Agarwal, Sandhini and Herbert-Voss, Ariel and Krueger, Gretchen and Henighan, Tom and Child, Rewon and Ramesh, Aditya and Ziegler, Daniel and Wu, Jeffrey and Winter, Clemens and Hesse, Chris and Chen, Mark and Sigler, Eric and Litwin, Mateusz and Gray, Scott and Chess, Benjamin and Clark, Jack and Berner, Christopher and McCandlish, Sam and Radford, Alec and Sutskever, Ilya and Amodei, Dario},
+	Title = {Language Models are Few-Shot Learners},
+	Booktitle = {Advances in Neural Information Processing Systems},
+	Volume = {33},
+	Pages = {1877--1901},
+	Publisher = {Curran Associates, Inc.},
+	Year = {2020},
+}
+
+@article{ji2023,
+	Author = {Ji, Ziwei and Lee, Nayeon and Frieske, Rita and Yu, Tiezheng and Su, Dan and Xu, Yan and Ishii, Etsuko and Bang, Ye Jin and Madotto, Andrea and Fung, Pascale},
+	Title = {Survey of Hallucination in Natural Language Generation},
+	Journal = {ACM Computing Surveys},
+	Volume = {55},
+	Number = {12},
+	Pages = {1--38},
+	Year = {2023},
+	Doi = {10.1145/3571730},
+}
+
+% --- Text-to-SQL ---
+@inproceedings{yu2018,
+	Author = {Yu, Tao and Zhang, Rui and Yang, Kai and Yasunaga, Michihiro and Wang, Dongxu and Li, Zifan and Ma, James and Li, Irene and Yao, Qingning and Roman, Shanelle and Zhang, Zilin and Radev, Dragomir},
+	Title = {{Spider}: A Large-Scale Human-Labeled Dataset for Complex and Cross-Domain Semantic Parsing and Text-to-{SQL} Task},
+	Booktitle = {Proceedings of the 2018 Conference on Empirical Methods in Natural Language Processing},
+	Pages = {3911--3921},
+	Publisher = {Association for Computational Linguistics},
+	Year = {2018},
+	Doi = {10.18653/v1/D18-1425},
+}
+
+@inproceedings{li2023,
+	Author = {Li, Jinyang and Hui, Binyuan and Qu, Ge and Yang, Jiaxi and Li, Binhua and Li, Bowen and Wang, Bailin and Qin, Bowen and Geng, Ruiying and Huo, Nan and Zhou, Xuanhe and Ma, Chenhao and Li, Guoliang and Chang, Kevin and Huang, Fei and Cheng, Reynold and Li, Yongbin},
+	Title = {Can {LLM} Already Serve as A Database Interface? {A} {BIg} Bench for Large-Scale Database Grounded Text-to-{SQLs}},
+	Booktitle = {Advances in Neural Information Processing Systems},
+	Volume = {36},
+	Pages = {42330--42357},
+	Publisher = {Curran Associates, Inc.},
+	Year = {2023},
+	Doi = {10.52202/075280-1835},
+}
+
+@article{katsogiannismeimarakis2023,
+	Author = {Katsogiannis-Meimarakis, George and Koutrika, Georgia},
+	Title = {A survey on deep learning approaches for text-to-{SQL}},
+	Journal = {The {VLDB} Journal},
+	Volume = {32},
+	Number = {4},
+	Pages = {905--936},
+	Year = {2023},
+	Doi = {10.1007/s00778-022-00776-8},
+}
+
+@article{hong2025,
+	Author = {Hong, Zijin and Yuan, Zheng and Zhang, Qinggang and Chen, Hao and Dong, Junnan and Huang, Feiran and Huang, Xiao},
+	Title = {Next-Generation Database Interfaces: A Survey of {LLM}-Based Text-to-{SQL}},
+	Journal = {{IEEE} Transactions on Knowledge and Data Engineering},
+	Volume = {37},
+	Number = {12},
+	Pages = {7328--7345},
+	Year = {2025},
+	Doi = {10.1109/TKDE.2025.3609486},
+}
+
+@inproceedings{pourreza2023,
+	Author = {Pourreza, Mohammadreza and Rafiei, Davood},
+	Title = {{DIN-SQL}: Decomposed In-Context Learning of Text-to-{SQL} with Self-Correction},
+	Booktitle = {Advances in Neural Information Processing Systems},
+	Volume = {36},
+	Pages = {36339--36348},
+	Publisher = {Curran Associates, Inc.},
+	Year = {2023},
+	Doi = {10.52202/075280-1577},
+}
+
+@article{gao2024,
+	Author = {Gao, Dawei and Wang, Haibin and Li, Yaliang and Sun, Xiuyu and Qian, Yichen and Ding, Bolin and Zhou, Jingren},
+	Title = {Text-to-{SQL} Empowered by Large Language Models: A Benchmark Evaluation},
+	Journal = {Proceedings of the {VLDB} Endowment},
+	Volume = {17},
+	Number = {5},
+	Pages = {1132--1145},
+	Year = {2024},
+	Doi = {10.14778/3641204.3641221},
+}
+
+% --- Tecnologia ---
+@inproceedings{raasveldt2019,
+	Author = {Raasveldt, Mark and M{\"u}hleisen, Hannes},
+	Title = {{DuckDB}: an Embeddable Analytical Database},
+	Booktitle = {Proceedings of the 2019 International Conference on Management of Data},
+	Series = {SIGMOD '19},
+	Pages = {1981--1984},
+	Publisher = {ACM},
+	Year = {2019},
+	Doi = {10.1145/3299869.3320212},
+}
+
+% --- Usabilidade ---
+@incollection{brooke1996,
+	Author = {Brooke, John},
+	Title = {{SUS}: A ``Quick and Dirty'' Usability Scale},
+	Booktitle = {Usability Evaluation In Industry},
+	Editor = {Jordan, Patrick W. and Thomas, B. and McClelland, Ian Lyall and Weerdmeester, Bernard},
+	Pages = {207--212},
+	Publisher = {CRC Press},
+	Year = {1996},
+	Doi = {10.1201/9781498710411-35},
+}
+
+@inproceedings{nielsen1993,
+	Author = {Nielsen, Jakob and Landauer, Thomas K.},
+	Title = {A mathematical model of the finding of usability problems},
+	Booktitle = {Proceedings of the SIGCHI Conference on Human Factors in Computing Systems},
+	Series = {CHI '93},
+	Pages = {206--213},
+	Publisher = {ACM Press},
+	Year = {1993},
+	Doi = {10.1145/169059.169166},
+}
+
+% --- Metodologia ---
+@book{wohlin2012,
+	Author = {Wohlin, Claes and Runeson, Per and H{\"o}st, Martin and Ohlsson, Magnus C. and Regnell, Bj{\"o}rn and Wessl{\'e}n, Anders},
+	Title = {Experimentation in Software Engineering},
+	Publisher = {Springer},
+	Address = {Berlin, Heidelberg},
+	Year = {2012},
+	Isbn = {9783642290442},
+	Doi = {10.1007/978-3-642-29044-2},
+}
+
+@incollection{vansolingen2002,
+	Author = {van Solingen, Rini and Basili, Victor and Caldiera, Gianluigi and Rombach, H. Dieter},
+	Title = {Goal Question Metric ({GQM}) Approach},
+	Booktitle = {Encyclopedia of Software Engineering},
+	Publisher = {John Wiley \& Sons},
+	Year = {2002},
+	Doi = {10.1002/0471028959.sof142},
+}
+
+@article{cochran1950,
+	Author = {Cochran, W. G.},
+	Title = {The Comparison of Percentages in Matched Samples},
+	Journal = {Biometrika},
+	Volume = {37},
+	Number = {3-4},
+	Pages = {256--266},
+	Year = {1950},
+	Doi = {10.1093/biomet/37.3-4.256},
+}
+
+@article{mcnemar1947,
+	Author = {McNemar, Quinn},
+	Title = {Note on the Sampling Error of the Difference Between Correlated Proportions or Percentages},
+	Journal = {Psychometrika},
+	Volume = {12},
+	Number = {2},
+	Pages = {153--157},
+	Year = {1947},
+	Doi = {10.1007/BF02295996},
+}
+
+% --- Legislação ---
+@misc{brasil2018,
+	Author = {{BRASIL}},
+	Title = {Lei nº 13.709, de 14 de agosto de 2018. Lei Geral de Proteção de Dados Pessoais ({LGPD})},
+	Howpublished = {Diário Oficial da União},
+	Year = {2018},
+	Url = {https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm},
+	Urlaccessdate = {20 out. 2026},
+}
+
+% --- Tecnologias da Proposta ---
+@article{li2018,
+	Author = {Li, Deqing and Mei, Honghui and Shen, Yi and Su, Shuang and Zhang, Wenli and Wang, Junting and Zu, Ming and Chen, Wei},
+	Title = {{ECharts}: A declarative framework for rapid construction of web-based visualization},
+	Journal = {Visual Informatics},
+	Volume = {2},
+	Number = {2},
+	Pages = {136--146},
+	Year = {2018},
+	Doi = {10.1016/j.visinf.2018.04.011},
+}
+
+@misc{fastapi2026,
+	Author = {{FASTAPI}},
+	Title = {{FastAPI}: documentação oficial},
+	Year = {2026},
+	Url = {https://fastapi.tiangolo.com/},
+	Urlaccessdate = {20 out. 2026},
+}
+
+@misc{vue2026,
+	Author = {{VUE.JS}},
+	Title = {Introduction},
+	Howpublished = {Vue.js Guide},
+	Year = {2026},
+	Url = {https://vuejs.org/guide/introduction.html},
+	Urlaccessdate = {20 out. 2026},
+}
+
+% --- OpenAI (documentação da API) ---
+@misc{openai2026a,
+	Author = {{OPENAI}},
+	Title = {{GPT-5.6 Terra} Model},
+	Howpublished = {OpenAI API Documentation},
+	Year = {2026},
+	Url = {https://platform.openai.com/docs/models/gpt-5.6-terra},
+	Urlaccessdate = {20 out. 2026},
+}
+
+@misc{openai2026b,
+	Author = {{OPENAI}},
+	Title = {Structured model outputs},
+	Howpublished = {OpenAI API Documentation},
+	Year = {2026},
+	Url = {https://platform.openai.com/docs/guides/structured-outputs},
+	Urlaccessdate = {20 out. 2026},
+}
+
+@misc{openai2026c,
+	Author = {{OPENAI}},
+	Title = {Data controls in the {OpenAI} platform},
+	Howpublished = {OpenAI API Documentation},
+	Year = {2026},
+	Url = {https://platform.openai.com/docs/guides/your-data},
+	Urlaccessdate = {20 out. 2026},
+}
+
+% --- Referencial teórico (conferidas em doi.org/Crossref e OpenLibrary em 2026-10-22) ---
+@article{alpar2016,
+	Author = {Alpar, Paul and Schulz, Michael},
+	Title = {Self-Service Business Intelligence},
+	Journal = {Business \& Information Systems Engineering},
+	Volume = {58},
+	Number = {2},
+	Pages = {151--155},
+	Year = {2016},
+	Doi = {10.1007/s12599-016-0424-6},
+}
+
+@inproceedings{lennerholt2018,
+	Author = {Lennerholt, Christian and van Laere, Joeri and S{\"o}derstr{\"o}m, Eva},
+	Title = {Implementation Challenges of Self Service Business Intelligence: A Literature Review},
+	Booktitle = {Proceedings of the 51st Hawaii International Conference on System Sciences},
+	Publisher = {Hawaii International Conference on System Sciences},
+	Year = {2018},
+	Doi = {10.24251/HICSS.2018.631},
+}
+
+@book{kimball2013,
+	Author = {Kimball, Ralph and Ross, Margy},
+	Title = {The Data Warehouse Toolkit: The Definitive Guide to Dimensional Modeling},
+	Publisher = {Wiley},
+	Year = {2013},
+	Isbn = {9781118530801},
+}
+
+@inproceedings{hong2024,
+	Author = {Hong, Zijin and Yuan, Zheng and Chen, Hao and Zhang, Qinggang and Huang, Feiran and Huang, Xiao},
+	Title = {Knowledge-to-{SQL}: Enhancing {SQL} Generation with Data Expert {LLM}},
+	Booktitle = {Findings of the Association for Computational Linguistics: ACL 2024},
+	Pages = {10997--11008},
+	Publisher = {Association for Computational Linguistics},
+	Year = {2024},
+	Doi = {10.18653/v1/2024.findings-acl.653},
+}
+
+@incollection{bevan2015,
+	Author = {Bevan, Nigel and Carter, James and Harker, Susan},
+	Title = {{ISO} 9241-11 Revised: What Have We Learnt About Usability Since 1998?},
+	Booktitle = {Human-Computer Interaction: Design and Evaluation},
+	Series = {Lecture Notes in Computer Science},
+	Pages = {143--151},
+	Publisher = {Springer},
+	Year = {2015},
+	Doi = {10.1007/978-3-319-20901-2_13},
+}
+
+@article{bangor2008,
+	Author = {Bangor, Aaron and Kortum, Philip T. and Miller, James T.},
+	Title = {An Empirical Evaluation of the System Usability Scale},
+	Journal = {International Journal of Human-Computer Interaction},
+	Volume = {24},
+	Number = {6},
+	Pages = {574--594},
+	Year = {2008},
+	Doi = {10.1080/10447310802205776},
+}
+
+@article{lewis2018,
+	Author = {Lewis, James R.},
+	Title = {The System Usability Scale: Past, Present, and Future},
+	Journal = {International Journal of Human-Computer Interaction},
+	Volume = {34},
+	Number = {7},
+	Pages = {577--590},
+	Year = {2018},
+	Doi = {10.1080/10447318.2018.1455307},
+}
+
+
+% --- Revisão após o parecer do orientador (conferidas em iclr.cc, arXiv e Crossref em 2026-11-13) ---
+@inproceedings{lei2025,
+	Author = {Lei, Fangyu and Chen, Jixuan and Ye, Yuxiao and Cao, Ruisheng and Shin, Dongchan and Su, Hongjin and Suo, Zhaoqing and Gao, Hongcheng and Hu, Wenjing and Yin, Pengcheng and Zhong, Victor and Xiong, Caiming and Sun, Ruoxi and Liu, Qian and Wang, Sida and Yu, Tao},
+	Title = {Spider 2.0: Evaluating Language Models on Real-World Enterprise Text-to-{SQL} Workflows},
+	Booktitle = {The Thirteenth International Conference on Learning Representations ({ICLR} 2025)},
+	Year = {2025},
+}
+
+@article{ouyang2025,
+	Author = {Ouyang, Shuyin and Zhang, Jie M. and Harman, Mark and Wang, Meng},
+	Title = {An Empirical Study of the Non-Determinism of {ChatGPT} in Code Generation},
+	Journal = {{ACM} Transactions on Software Engineering and Methodology},
+	Volume = {34},
+	Number = {2},
+	Pages = {1--28},
+	Year = {2025},
+	Doi = {10.1145/3697010},
+}
+
+@article{wilson1927,
+	Author = {Wilson, Edwin B.},
+	Title = {Probable Inference, the Law of Succession, and Statistical Inference},
+	Journal = {Journal of the American Statistical Association},
+	Volume = {22},
+	Number = {158},
+	Pages = {209--212},
+	Year = {1927},
+	Doi = {10.1080/01621459.1927.10502953},
+}
+
+@article{dunn1961,
+	Author = {Dunn, Olive Jean},
+	Title = {Multiple Comparisons among Means},
+	Journal = {Journal of the American Statistical Association},
+	Volume = {56},
+	Number = {293},
+	Pages = {52--64},
+	Year = {1961},
+	Doi = {10.1080/01621459.1961.10482090},
+}
+
+% --- Opções do estilo abnt-num.bst do modelo (não é uma referência) ---
+% abnt-url-package=url faz as URLs saírem em \url{...}, com quebra de linha e
+% sem erro em caracteres como "_". Ativada em fixos/extras.tex.
+% abnt-title-command=no é o valor padrão: a presença desse campo é o que faz o
+% .bst ler as opções antes de formatar as referências. Não remover.
+@ABNT-options{ABNT-options0,
+	key = {ABNT-options0},
+	abnt-url-package = {url},
+	abnt-title-command = {no},
+}
